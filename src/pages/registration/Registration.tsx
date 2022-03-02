@@ -9,8 +9,6 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { TextInput } from "../../components/inputs/shared/inputs/TextInput";
-import { useFormik } from "formik";
-import { LoginValidationSchema } from "./../../components/login/LoginValidationSchema";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -34,18 +32,6 @@ const useStyles = makeStyles((theme) => ({
 
 export const Registration: FC = () => {
     const classes = useStyles();
-
-    const formik = useFormik({
-        initialValues: {
-            username: "",
-            password: "",
-        },
-        validationSchema: LoginValidationSchema,
-        onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
-        },
-    });
-
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />

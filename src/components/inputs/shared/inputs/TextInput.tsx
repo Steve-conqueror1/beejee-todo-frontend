@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import { TextField } from "formik-material-ui";
 import { Field, useField } from "formik";
 
