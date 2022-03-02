@@ -4,9 +4,9 @@ import { Home } from "./pages/Home";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Login } from "./pages/login/Login";
 import { Registration } from "./pages/registration/Registration";
-import { EditTask } from "./pages/task/EditTask";
 import { CreateTask } from "./pages/task/CreateTask";
 import { AuthContext } from "./context/AuthContext";
+import {EditTask} from "./pages/task/EditTask";
 
 const App: FC = () => {
     return (
