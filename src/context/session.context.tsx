@@ -8,6 +8,7 @@ export type Session = {
     userType: string;
     username: string;
     email: string;
+    userId: string;
 };
 
 type HandleSession = (session?: Session) => void;
@@ -22,7 +23,8 @@ const SessionProvider: React.FC = ({ children }) => {
         token: "",
         userType: "",
         username: "",
-        email: ""
+        email: "",
+        userId: ""
     };
     const initialState = retrieveValues() ||  defaultValues
 
