@@ -38,7 +38,6 @@ export const LoginFormik = () => {
     const navigate = useNavigate();
 
     const handleLogin = (response: LoginResponse) => {
-        console.log("--response--", response);
         const { userType, email, username, token } = response;
 
         const session = { isAuthenticated: true, token, userType, username, email };

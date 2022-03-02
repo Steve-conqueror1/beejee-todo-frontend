@@ -10,6 +10,8 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import { api } from "./../../helpers/api";
 import { useNavigate } from "react-router-dom";
+import {useSession} from "../../context/session.context";
+import {EditOutlined} from "@material-ui/icons";
 
 const useStyles = makeStyles({
     table: {
@@ -47,6 +49,10 @@ export const TodosTable: FC = () => {
     const classes = useStyles();
     const [tasks, setTasks] = React.useState<TableProps[]>();
     const navigate = useNavigate();
+    const [session] = useSession()
+    const {userType} = session
+
+
     const handleLinkClick = (to: string) => {
         navigate(to);
     };
@@ -81,7 +87,7 @@ export const TodosTable: FC = () => {
                                 <TableCell>{task.createdBy.username}</TableCell>
                                 <TableCell>{task.createdBy.email}</TableCell>
                                 <TableCell>{task.status.join(" ")}</TableCell>
-                                <TableCell>{task.text}</TableCell>
+                                <TableCell>{task.text}{userType === "admin" && <Button  onClick={() => handleLinkClick("/tasks/update")}><EditOutlined color="primary"/> </Button>} </TableCell>
                             </TableRow>
                         ))}
                 </TableBody>
