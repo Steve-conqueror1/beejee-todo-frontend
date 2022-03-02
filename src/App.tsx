@@ -1,25 +1,16 @@
 import React, { FC } from "react";
-import { ButtonAppBar } from "./components/inputs/shared/navigation/AppBar";
+import { ButtonAppBar } from "./components/navigation/AppBar";
 import { Home } from "./pages/Home";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Login } from "./pages/login/Login";
 import { Registration } from "./pages/registration/Registration";
 import { CreateTask } from "./pages/task/CreateTask";
-import { AuthContext } from "./context/AuthContext";
+import { SessionProvider } from "./context/session.context";
 import {EditTask} from "./pages/task/EditTask";
 
 const App: FC = () => {
     return (
-        <AuthContext.Provider
-            value={{
-                isLoggedIn: false,
-                userType: null,
-                token: null,
-                email: null,
-                login: () => {},
-                logout: () => {},
-            }}
-        >
+        <SessionProvider>
             <Router>
                 <ButtonAppBar />
                 <Routes>
@@ -30,7 +21,7 @@ const App: FC = () => {
                     <Route path="/login" element={<Login />} />
                 </Routes>
             </Router>
-        </AuthContext.Provider>
+        </SessionProvider>
     );
 };
 

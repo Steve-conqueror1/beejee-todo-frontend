@@ -7,6 +7,8 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import { useNavigate } from "react-router-dom";
+import {useSession} from "../../context/session.context";
+import {AccountCircleRounded} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -19,15 +21,31 @@ const useStyles = makeStyles((theme: Theme) =>
         title: {
             flexGrow: 1,
         },
+        username: {
+            marginRight: "2rem",
+            color: "#fff"
+        },
+        profile: {
+            marginRight: "1rem"
+        }
     }),
 );
 
 export const ButtonAppBar = () => {
     const classes = useStyles();
     const navigate = useNavigate();
+    const [session, logout] = useSession()
+    const {username, token} = session
+
+
     const handleLinkClick = (to: string) => {
         navigate(to);
     };
+
+    const handleLogout = () => {
+       logout()
+        navigate("/login");
+    }
 
     return (
         <div className={classes.root}>
@@ -45,9 +63,12 @@ export const ButtonAppBar = () => {
                     <Typography onClick={() => handleLinkClick("/")} variant="h6" className={classes.title}>
                         Tasks
                     </Typography>
-                    <Button onClick={() => handleLinkClick("/login")} color="inherit">
+                    {username && <Button  className ={classes.username} ><AccountCircleRounded className={classes.profile}/> {username}</Button>}
+                    {token ? (<Button onClick={() => handleLogout()} color="inherit">
+                        Logout
+                    </Button>) :( <Button onClick={() => handleLinkClick("/login")} color="inherit">
                         Login
-                    </Button>
+                    </Button>) }
                 </Toolbar>
             </AppBar>
         </div>
