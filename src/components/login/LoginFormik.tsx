@@ -7,7 +7,7 @@ import Link from "@material-ui/core/Link";
 import { useNavigate } from "react-router-dom";
 import { api } from "./../../helpers/api";
 import { Alert } from "@material-ui/lab";
-import {Session, useSession} from "../../context/session.context";
+import { useSession } from "../../context/session.context";
 
 
 export interface User {
@@ -47,7 +47,7 @@ export const LoginFormik = () => {
 
     const handleSubmit = (values: FormikValues, actions: FormikHelpers<LoginFormProps>) => {
         const { setSubmitting } = actions;
-        api(null, process.env.REACT_APP_API_SERVER)
+        api(null, process.env.REACT_APP_API_SERVER2)
             .init({
                 body: JSON.stringify(values),
                 headers: { "Content-Type": "application/json" },

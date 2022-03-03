@@ -17,7 +17,7 @@ const App: FC = () => {
                     <Route path="/" element={<Home />} />
                     <Route path="/register" element={<Registration />} />
                     <Route path="/tasks/create" element={<CreateTask />} />
-                    <Route path="/tasks/update" element={<EditTask />} />
+                    <Route path="/tasks/update/:id" element={<EditTask />} />
                     <Route path="/login" element={<Login />} />
                 </Routes>
             </Router>
