@@ -39,6 +39,7 @@ export interface TableProps {
     status: string[];
     text: string;
     createdBy: UserProps;
+    _id:string;
 }
 
 export interface TaskResponse {
@@ -58,7 +59,7 @@ export const TodosTable: FC = () => {
     };
 
     const getData = () => {
-        api(null, process.env.REACT_APP_API_SERVER)
+        api(null, process.env.REACT_APP_API_SERVER2)
             .get<TableProps[]>("/tasks")
             .then((response: TableProps[]) => {
                 setTasks(response);
@@ -76,8 +77,8 @@ export const TodosTable: FC = () => {
                     <TableRow>
                         <TableCell>USERNAME</TableCell>
                         <TableCell>EMAIL</TableCell>
-                        <TableCell>TASK</TableCell>
                         <TableCell>STATUS</TableCell>
+                        <TableCell>TASK</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -87,7 +88,7 @@ export const TodosTable: FC = () => {
                                 <TableCell>{task.createdBy.username}</TableCell>
                                 <TableCell>{task.createdBy.email}</TableCell>
                                 <TableCell>{task.status.join(" ")}</TableCell>
-                                <TableCell>{task.text}{userType === "admin" && <Button  onClick={() => handleLinkClick("/tasks/update")}><EditOutlined color="primary"/> </Button>} </TableCell>
+                                <TableCell>{task.text}{userType === "admin" && <Button  onClick={() => handleLinkClick(`/tasks/update/${task._id}`)}><EditOutlined color="primary"/> </Button>} </TableCell>
                             </TableRow>
                         ))}
                 </TableBody>
