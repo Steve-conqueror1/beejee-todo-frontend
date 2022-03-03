@@ -117,7 +117,7 @@ export const TodosTable: FC = () => {
             <Box className={classes.pagination}>
             <Button onClick={() => setPage(page-1)} disabled={page=== 1} className={classes.paginationButton} variant="contained"> <NavigateBeforeIcon />Previous</Button>
                 &nbsp;
-            <Button onClick={() => setPage(page+1)} disabled={page=== totalPages}  className={classes.paginationButton} variant="contained" >Next<NavigateNextIcon/></Button>
+            <Button onClick={() => setPage(page+1)} disabled={page=== totalPages || tasks && tasks.length===0}  className={classes.paginationButton} variant="contained" >Next<NavigateNextIcon/></Button>
             </Box>
             <div className={classes.btnContainer}>
                 <Button
