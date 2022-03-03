@@ -51,7 +51,7 @@ export const TaskFormik: FC = () => {
    };
 
        const getTask = (id: string) => {
-        api(null, process.env.REACT_APP_API_SERVER2)
+        api(null, process.env.REACT_APP_API_SERVER)
             .get<TableProps>(`/tasks/${id}`)
             .then((response: TableProps) => {
                 setTask(response);
@@ -88,7 +88,7 @@ export const TaskFormik: FC = () => {
         } else{
           data = { createdBy:userId}
         }
-        api(token, process.env.REACT_APP_API_SERVER2)
+        api(token, process.env.REACT_APP_API_SERVER)
             .init({
                 body: JSON.stringify({...values, ...data}),
                 headers: { "Content-Type": "application/json" },

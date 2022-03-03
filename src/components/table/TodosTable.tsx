@@ -12,6 +12,11 @@ import { api } from "./../../helpers/api";
 import { useNavigate } from "react-router-dom";
 import {useSession} from "../../context/session.context";
 import {EditOutlined} from "@material-ui/icons";
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import {Box} from "@material-ui/core";
+
+
 
 const useStyles = makeStyles({
     table: {
@@ -26,6 +31,14 @@ const useStyles = makeStyles({
         width: "70%",
         marginLeft: "15%",
     },
+    pagination:{
+        marginTop: "1rem",
+        display: "flex",
+        justifyContent: "center"
+    },
+    paginationButton:{
+      width: "10rem"
+    }
 });
 
 export interface UserProps {
@@ -59,7 +72,7 @@ export const TodosTable: FC = () => {
     };
 
     const getData = () => {
-        api(null, process.env.REACT_APP_API_SERVER2)
+        api(null, process.env.REACT_APP_API_SERVER)
             .get<TableProps[]>("/tasks")
             .then((response: TableProps[]) => {
                 setTasks(response);
@@ -79,6 +92,7 @@ export const TodosTable: FC = () => {
                         <TableCell>EMAIL</TableCell>
                         <TableCell>STATUS</TableCell>
                         <TableCell>TASK</TableCell>
+                        <TableCell></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -88,11 +102,17 @@ export const TodosTable: FC = () => {
                                 <TableCell>{task.createdBy.username}</TableCell>
                                 <TableCell>{task.createdBy.email}</TableCell>
                                 <TableCell>{task.status.join(" ")}</TableCell>
-                                <TableCell>{task.text}{userType === "admin" && <Button  onClick={() => handleLinkClick(`/tasks/update/${task._id}`)}><EditOutlined color="primary"/> </Button>} </TableCell>
+                                <TableCell>{task.text} </TableCell>
+                                <TableCell>{userType === "admin" && <Button  onClick={() => handleLinkClick(`/tasks/update/${task._id}`)}><EditOutlined color="primary"/> </Button>}</TableCell>
                             </TableRow>
                         ))}
                 </TableBody>
             </Table>
+            <Box className={classes.pagination}>
+            <Button className={classes.paginationButton} variant="contained"> <NavigateBeforeIcon />Previous</Button>
+                &nbsp;
+            <Button className={classes.paginationButton} variant="contained" >Next<NavigateNextIcon/></Button>
+            </Box>
             <div className={classes.btnContainer}>
                 <Button
                     onClick={() => handleLinkClick("/tasks/create")}
