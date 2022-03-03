@@ -57,6 +57,8 @@ export interface TableProps {
 
 export interface TaskResponse {
     data: TableProps[];
+    documentCount: number;
+    totalPages:  number;
 }
 
 export const TodosTable: FC = () => {
@@ -65,6 +67,8 @@ export const TodosTable: FC = () => {
     const navigate = useNavigate();
     const [session] = useSession()
     const {userType} = session
+    const [page, setPage] = React.useState(1)
+    const [totalPages, setTotalPages] = React.useState<number>()
 
 
     const handleLinkClick = (to: string) => {
@@ -73,15 +77,17 @@ export const TodosTable: FC = () => {
 
     const getData = () => {
         api(null, process.env.REACT_APP_API_SERVER)
-            .get<TableProps[]>("/tasks")
-            .then((response: TableProps[]) => {
-                setTasks(response);
+            .get<TaskResponse>(`/tasks?page=${page}`)
+            .then((response: TaskResponse) => {
+                console.log(response.data)
+                setTasks(response.data);
+                setTotalPages(response.totalPages)
             });
     };
 
     React.useEffect(() => {
         getData();
-    }, []);
+    }, [page]);
 
     return (
         <TableContainer component={Paper}>
@@ -109,9 +115,9 @@ export const TodosTable: FC = () => {
                 </TableBody>
             </Table>
             <Box className={classes.pagination}>
-            <Button className={classes.paginationButton} variant="contained"> <NavigateBeforeIcon />Previous</Button>
+            <Button onClick={() => setPage(page-1)} disabled={page=== 1} className={classes.paginationButton} variant="contained"> <NavigateBeforeIcon />Previous</Button>
                 &nbsp;
-            <Button className={classes.paginationButton} variant="contained" >Next<NavigateNextIcon/></Button>
+            <Button onClick={() => setPage(page+1)} disabled={page=== totalPages}  className={classes.paginationButton} variant="contained" >Next<NavigateNextIcon/></Button>
             </Box>
             <div className={classes.btnContainer}>
                 <Button
