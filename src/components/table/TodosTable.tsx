@@ -69,6 +69,7 @@ export const TodosTable: FC = () => {
     const {userType} = session
     const [page, setPage] = React.useState(1)
     const [totalPages, setTotalPages] = React.useState<number>()
+    const [documentCount, setDocumentCount] = React.useState<number>(0)
 
 
     const handleLinkClick = (to: string) => {
@@ -82,6 +83,7 @@ export const TodosTable: FC = () => {
                 console.log(response.data)
                 setTasks(response.data);
                 setTotalPages(response.totalPages)
+                setDocumentCount(response.documentCount)
             });
     };
 
@@ -114,11 +116,15 @@ export const TodosTable: FC = () => {
                         ))}
                 </TableBody>
             </Table>
-            <Box className={classes.pagination}>
-            <Button onClick={() => setPage(page-1)} disabled={page=== 1} className={classes.paginationButton} variant="contained"> <NavigateBeforeIcon />Previous</Button>
+            {documentCount>3 && (
+                <Box className={classes.pagination}>
+                <Button onClick={() => setPage(page - 1)} disabled={page === 1} className={classes.paginationButton}
+                        variant="contained"> <NavigateBeforeIcon/>Previous</Button>
                 &nbsp;
-            <Button onClick={() => setPage(page+1)} disabled={page=== totalPages || tasks && tasks.length===0}  className={classes.paginationButton} variant="contained" >Next<NavigateNextIcon/></Button>
+                <Button onClick={() => setPage(page + 1)} disabled={page === totalPages || tasks && tasks.length === 0}
+                        className={classes.paginationButton} variant="contained">Next<NavigateNextIcon/></Button>
             </Box>
+            )}
             <div className={classes.btnContainer}>
                 <Button
                     onClick={() => handleLinkClick("/tasks/create")}
