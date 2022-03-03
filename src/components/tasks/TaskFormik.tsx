@@ -6,6 +6,7 @@ import { Alert } from "@material-ui/lab";
 import {Session, useSession} from "../../context/session.context";
 import {taskValidationSchema} from "./taskValidationSchema";
 import {TaskForm} from "./TaskForm";
+import {Snackbar} from "@material-ui/core";
 
 
 export interface User {
@@ -32,7 +33,16 @@ export const TaskFormik = () => {
     const {userId, token} = session
     const navigate = useNavigate();
 
-    console.log("session: ", session)
+     const [open, setOpen] = React.useState(false);
+
+     const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+    navigate("/")
+  };
 
     const handleSubmit = (values: FormikValues, actions: FormikHelpers<TaskProps>) => {
         const { setSubmitting } = actions;
@@ -43,7 +53,7 @@ export const TaskFormik = () => {
             })
             .post<TaskResponse>("/tasks")
             .then(()=>{
-                navigate("/")
+                setOpen(true);
             })
             .catch((response: Response) => {
                 setSubmitting(false);
@@ -51,6 +61,12 @@ export const TaskFormik = () => {
     };
 
     return (
+        <>
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+              <Alert severity="success">
+                Task Created Successfully
+              </Alert>
+            </Snackbar>
             <Formik
                 enableReinitialize
                 initialValues={initialValues}
@@ -59,5 +75,6 @@ export const TaskFormik = () => {
             >
                 <TaskForm />
             </Formik>
+            </>
     );
 };
