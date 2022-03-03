@@ -15,6 +15,8 @@ import {EditOutlined} from "@material-ui/icons";
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import {Box} from "@material-ui/core";
+import SortIcon from '@material-ui/icons/Sort';
+import {hover} from "@testing-library/user-event/dist/hover";
 
 
 
@@ -38,6 +40,14 @@ const useStyles = makeStyles({
     },
     paginationButton:{
       width: "10rem"
+    },
+    sortIcon:{
+        marginRight: '1rem',
+        marginTop: '2rem',
+        '&:hover': {
+            cursor: 'pointer'
+        }
+
     }
 });
 
@@ -96,9 +106,9 @@ export const TodosTable: FC = () => {
             <Table className={classes.table} size="small" aria-label="a dense table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>USERNAME</TableCell>
-                        <TableCell>EMAIL</TableCell>
-                        <TableCell>STATUS</TableCell>
+                        <TableCell>USERNAME <SortIcon color="primary" className={classes.sortIcon} fontSize="small"/></TableCell>
+                        <TableCell>EMAIL <SortIcon color="primary" className={classes.sortIcon} fontSize="small"/> </TableCell>
+                        <TableCell>STATUS <SortIcon color="primary" className={classes.sortIcon} fontSize="small"/> </TableCell>
                         <TableCell>TASK</TableCell>
                         <TableCell></TableCell>
                     </TableRow>
