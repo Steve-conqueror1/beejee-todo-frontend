@@ -9,6 +9,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import { useNavigate } from "react-router-dom";
 import {useSession} from "../../context/session.context";
 import {AccountCircleRounded} from "@material-ui/icons";
+import {deleteValues} from "../../helpers/localStorage";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export const ButtonAppBar = () => {
     const classes = useStyles();
     const navigate = useNavigate();
-    const [session, logout] = useSession()
+    const [session ] = useSession()
     const {username, token} = session
 
 
@@ -43,7 +44,7 @@ export const ButtonAppBar = () => {
     };
 
     const handleLogout = () => {
-       logout()
+       deleteValues()
         navigate("/login");
     }
 

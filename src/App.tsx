@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { ButtonAppBar } from "./components/navigation/AppBar";
 import { Home } from "./pages/Home";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Login } from "./pages/login/Login";
+import { Login } from "./pages/security/Login";
 import { Registration } from "./pages/registration/Registration";
 import { CreateTask } from "./pages/task/CreateTask";
 import { SessionProvider } from "./context/session.context";

@@ -1,3 +1,5 @@
+import {deleteValues} from "./localStorage";
+
 interface API {
     init(init: RequestInit): API;
     setParams(params: { [key: string]: unknown }): API;
@@ -34,7 +36,8 @@ export function api(token: string| null, base_url?: string): API {
 
         return fetch(url.toString(), requestInit).then((response) => {
             if (response.status === 401) {
-                window.location.href = "/logout";
+                 deleteValues();
+                window.location.href = "/login";
             }
 
             if (!response.ok) {
