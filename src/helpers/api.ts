@@ -1,5 +1,3 @@
-import { CONTENT_TYPES } from "./constants";
-
 interface API {
     init(init: RequestInit): API;
     setParams(params: { [key: string]: unknown }): API;
@@ -7,10 +5,9 @@ interface API {
     post<T>(path?: string): Promise<T>;
     put<T>(path?: string): Promise<T>;
     patch<T>(path?: string): Promise<T>;
-    delete<T>(path?: string): Promise<T>;
 }
 
-export function api(base_url?: string): API {
+export function api(token: string| null, base_url?: string): API {
     let requestInit: RequestInit = {};
     let paramsInit: { [key: string]: unknown } = {};
 
@@ -19,6 +16,10 @@ export function api(base_url?: string): API {
 
         if (!(requestInit.headers instanceof Headers)) {
             requestInit.headers = new Headers(requestInit.headers);
+        }
+
+        if(token){
+            requestInit.headers.set("Authorization", `Bearer ${token}`)
         }
 
         const url = new URL(`${base_url}${path}`);
@@ -40,18 +41,11 @@ export function api(base_url?: string): API {
                 throw response;
             }
 
-            if ([...CONTENT_TYPES].includes(response.headers.get("Content-Type") || "")) {
-                return response.blob();
-            }
-
             return response.json();
         });
     };
 
     return {
-        delete(path) {
-            return getResponse("DELETE", path);
-        },
 
         get(path) {
             return getResponse("GET", path);
@@ -59,7 +53,6 @@ export function api(base_url?: string): API {
 
         init(init) {
             requestInit = init;
-
             return this;
         },
 

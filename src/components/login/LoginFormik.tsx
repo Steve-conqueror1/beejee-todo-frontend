@@ -47,7 +47,7 @@ export const LoginFormik = () => {
 
     const handleSubmit = (values: FormikValues, actions: FormikHelpers<LoginFormProps>) => {
         const { setSubmitting } = actions;
-        api(process.env.REACT_APP_API_SERVER)
+        api(null, process.env.REACT_APP_API_SERVER)
             .init({
                 body: JSON.stringify(values),
                 headers: { "Content-Type": "application/json" },

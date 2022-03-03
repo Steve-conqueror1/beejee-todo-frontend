@@ -58,7 +58,7 @@ export const TodosTable: FC = () => {
     };
 
     const getData = () => {
-        api(process.env.REACT_APP_API_SERVER)
+        api(null, process.env.REACT_APP_API_SERVER)
             .get<TableProps[]>("/tasks")
             .then((response: TableProps[]) => {
                 setTasks(response);
