@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, {FC} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -16,7 +16,6 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import {Box} from "@material-ui/core";
 import SortIcon from '@material-ui/icons/Sort';
-import {hover} from "@testing-library/user-event/dist/hover";
 
 
 
@@ -61,7 +60,6 @@ export interface TableProps {
     email: string;
     status: string[];
     text: string;
-    createdBy: UserProps;
     _id:string;
 }
 
@@ -80,17 +78,32 @@ export const TodosTable: FC = () => {
     const [page, setPage] = React.useState(1)
     const [totalPages, setTotalPages] = React.useState<number>()
     const [documentCount, setDocumentCount] = React.useState<number>(0)
+    const [sortField, setSortField] = React.useState('_id')
+    const [orderBy, setOrderBy] = React.useState<'desc' | 'asc'>('asc')
 
 
     const handleLinkClick = (to: string) => {
         navigate(to);
     };
 
+    const handleSort = (event:   React.SyntheticEvent<EventTarget>) => {
+        if((event.currentTarget as HTMLButtonElement).id === sortField){
+            if(orderBy === 'asc'){
+                setOrderBy('desc')
+            } else {
+                setOrderBy('asc')
+            }
+        }else{
+        setOrderBy('asc')
+        }
+        setSortField((event.currentTarget as HTMLButtonElement).id)
+
+    }
+
     const getData = () => {
         api(null, process.env.REACT_APP_API_SERVER)
-            .get<TaskResponse>(`/tasks?page=${page}`)
+            .get<TaskResponse>(`/tasks?page=${page}&sortBy=${sortField}&OrderBy=${orderBy}`)
             .then((response: TaskResponse) => {
-                console.log(response.data)
                 setTasks(response.data);
                 setTotalPages(response.totalPages)
                 setDocumentCount(response.documentCount)
@@ -99,16 +112,16 @@ export const TodosTable: FC = () => {
 
     React.useEffect(() => {
         getData();
-    }, [page]);
+    }, [page, sortField, orderBy]);
 
     return (
         <TableContainer component={Paper}>
             <Table className={classes.table} size="small" aria-label="a dense table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>USERNAME <SortIcon color="primary" className={classes.sortIcon} fontSize="small"/></TableCell>
-                        <TableCell>EMAIL <SortIcon color="primary" className={classes.sortIcon} fontSize="small"/> </TableCell>
-                        <TableCell>STATUS <SortIcon color="primary" className={classes.sortIcon} fontSize="small"/> </TableCell>
+                        <TableCell onClick={handleSort}  id="username">USERNAME <SortIcon  color="primary" className={classes.sortIcon} fontSize="small"/></TableCell>
+                        <TableCell onClick={handleSort} id="email">EMAIL <SortIcon color="primary" className={classes.sortIcon} fontSize="small"/> </TableCell>
+                        <TableCell onClick={handleSort} id="status">STATUS <SortIcon color="primary" className={classes.sortIcon} fontSize="small"/> </TableCell>
                         <TableCell>TASK</TableCell>
                         <TableCell></TableCell>
                     </TableRow>
@@ -117,8 +130,8 @@ export const TodosTable: FC = () => {
                     {tasks &&
                         tasks.map((task, index) => (
                             <TableRow key={index}>
-                                <TableCell>{task.createdBy.username}</TableCell>
-                                <TableCell>{task.createdBy.email}</TableCell>
+                                <TableCell>{task.username}</TableCell>
+                                <TableCell>{task.email}</TableCell>
                                 <TableCell>{task.status.join(" ")}</TableCell>
                                 <TableCell>{task.text} </TableCell>
                                 <TableCell>{userType === "admin" && <Button  onClick={() => handleLinkClick(`/tasks/update/${task._id}`)}><EditOutlined color="primary"/> </Button>}</TableCell>
