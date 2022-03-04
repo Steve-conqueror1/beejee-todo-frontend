@@ -6,8 +6,11 @@ import { TextInput } from "../inputs/shared/inputs/TextInput";
 
 const useStyles = makeStyles((theme) => ({
     form: {
-        width: "100%",
+        width: "60%",
         marginTop: theme.spacing(1),
+        display: 'flex',
+        flexDirection: 'column',
+
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
@@ -19,6 +22,8 @@ export const TaskForm: React.FC = () => {
 
     return (
         <Form noValidate className={classes.form}>
+            <TextInput label="username" name="username" placeholder="Enter Username" required />
+            <TextInput label="email" name="email" placeholder="Enter Email" required />
             <TextInput label="Task" name="text" placeholder="Enter Task" required />
             <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                 Send Task

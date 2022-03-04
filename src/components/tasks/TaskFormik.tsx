@@ -6,8 +6,9 @@ import { Alert } from "@material-ui/lab";
 import { useSession} from "../../context/session.context";
 import {taskValidationSchema} from "./taskValidationSchema";
 import {TaskForm} from "./TaskForm";
-import {Snackbar} from "@material-ui/core";
+import {Box, Snackbar} from "@material-ui/core";
 import {TableProps } from "../table/TodosTable";
+import {makeStyles} from "@material-ui/core/styles";
 
 export interface User {
     email: string;
@@ -18,6 +19,9 @@ export interface User {
 
 interface TaskProps {
     text: String;
+    email: String;
+    username: String;
+
 }
 
 type TaskResponse = {
@@ -31,8 +35,16 @@ type Params = {
     id?: string
 }
 
+
+const useStyles = makeStyles((theme) => ({
+    formik: {
+        display: "flex",
+        justifyContent: "center"
+    },
+}));
+
 export const TaskFormik: FC = () => {
-    const [initialValues, setInitialValues] = React.useState<TaskProps>({ text: "" })
+    const [initialValues, setInitialValues] = React.useState<TaskProps>({ text: "", username:"", email: "" })
     const [session] = useSession();
     const {userId, token} = session
     const navigate = useNavigate();
@@ -41,6 +53,7 @@ export const TaskFormik: FC = () => {
     const [open, setOpen] = React.useState(false);
     const [taskLoaded, setTaskLoaded] = React.useState(false);
     const [task, setTask] = React.useState<TableProps>();
+     const classes = useStyles();
 
    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -69,7 +82,7 @@ export const TaskFormik: FC = () => {
 
        React.useEffect(() => {
         if(taskLoaded){
-            setInitialValues({text: (task?.text) as string})
+            setInitialValues({text: ((task?.text) as string), username: ((task?.username) as string), email: ((task?.email) as string)})
         }
        }, [taskLoaded])
 
@@ -109,14 +122,16 @@ export const TaskFormik: FC = () => {
                 Task {id? "Updated" : "Created"} Successfully
               </Alert>
             </Snackbar>
-            <Formik
-                enableReinitialize
-                initialValues={initialValues}
-                validationSchema={taskValidationSchema}
-                onSubmit={handleSubmit}
-            >
-                <TaskForm />
-            </Formik>
+            <Box className={classes.formik}>
+                <Formik
+                    enableReinitialize
+                    initialValues={initialValues}
+                    validationSchema={taskValidationSchema}
+                    onSubmit={handleSubmit}
+                >
+                    <TaskForm />
+                </Formik>
+            </Box>
             </>
     );
 };
