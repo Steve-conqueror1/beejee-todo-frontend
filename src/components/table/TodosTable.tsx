@@ -74,7 +74,7 @@ export const TodosTable: FC = () => {
     const [tasks, setTasks] = React.useState<TableProps[]>();
     const navigate = useNavigate();
     const [session] = useSession()
-    const {userType} = session
+    const {token} = session
     const [page, setPage] = React.useState(1)
     const [totalPages, setTotalPages] = React.useState<number>()
     const [documentCount, setDocumentCount] = React.useState<number>(0)
@@ -119,22 +119,26 @@ export const TodosTable: FC = () => {
             <Table className={classes.table} size="small" aria-label="a dense table">
                 <TableHead>
                     <TableRow>
-                        <TableCell onClick={handleSort}  id="username">USERNAME <SortIcon  color="primary" className={classes.sortIcon} fontSize="small"/></TableCell>
+                        <TableCell onClick={handleSort}  id="username">ИМЯ ПОЛЬЗОВАТЕЛЯ <SortIcon  color="primary" className={classes.sortIcon} fontSize="small"/></TableCell>
                         <TableCell onClick={handleSort} id="email">EMAIL <SortIcon color="primary" className={classes.sortIcon} fontSize="small"/> </TableCell>
-                        <TableCell onClick={handleSort} id="status">STATUS <SortIcon color="primary" className={classes.sortIcon} fontSize="small"/> </TableCell>
-                        <TableCell>TASK</TableCell>
-                        <TableCell></TableCell>
+                        <TableCell onClick={handleSort} id="status">СТАТУС <SortIcon color="primary" className={classes.sortIcon} fontSize="small"/> </TableCell>
+                        <TableCell>ТЕКСТ ЗАДАЧИ</TableCell>
+                        {token && <TableCell></TableCell>}
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {tasks &&
                         tasks.map((task, index) => (
                             <TableRow key={index}>
-                                <TableCell>{task.username}</TableCell>
-                                <TableCell>{task.email}</TableCell>
-                                <TableCell>{task.status.join(" ")}</TableCell>
-                                <TableCell>{task.text} </TableCell>
-                                <TableCell>{userType === "admin" && <Button  onClick={() => handleLinkClick(`/tasks/update/${task._id}`)}><EditOutlined color="primary"/> </Button>}</TableCell>
+                                <TableCell width={token ? "25%" : "20%"}>{task.username}</TableCell>
+                                <TableCell width={token ? "25%" : "20%"}>{task.email}</TableCell>
+                                <TableCell width={token ? "25%" : "20%"}>{task.status.join(" ")}</TableCell>
+                                <TableCell width={token ? "25%" : "20%"}>{task.text} </TableCell>
+                                {token && (<TableCell width={"20%"}>
+                                    <Button onClick={() => handleLinkClick(`/tasks/update/${task._id}`)}>
+                                        <EditOutlined color="primary"/>
+                                    </Button>
+                                </TableCell>)}
                             </TableRow>
                         ))}
                 </TableBody>
