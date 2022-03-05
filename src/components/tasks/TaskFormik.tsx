@@ -9,6 +9,7 @@ import {TaskForm} from "./TaskForm";
 import {Box, Snackbar} from "@material-ui/core";
 import {TableProps } from "../table/TodosTable";
 import {makeStyles} from "@material-ui/core/styles";
+import {ADMIN_EDITED_STATUS, CREATED} from "../../helpers/constants";
 
 export interface User {
     email: string;
@@ -21,12 +22,12 @@ interface TaskProps {
     text: String;
     email: String;
     username: String;
-
+    isCompleted?: boolean;
 }
 
 type TaskResponse = {
     text: string;
-    status: string[];
+    status: string;
     createdBy: string;
     id: string;
 };
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const TaskFormik: FC = () => {
-    const [initialValues, setInitialValues] = React.useState<TaskProps>({ text: "", username:"", email: "" })
+    const [initialValues, setInitialValues] = React.useState<TaskProps>({ text: "", username:"", email: "", isCompleted: false })
     const [session] = useSession();
     const {userId, token} = session
     const navigate = useNavigate();
@@ -53,7 +54,12 @@ export const TaskFormik: FC = () => {
     const [open, setOpen] = React.useState(false);
     const [taskLoaded, setTaskLoaded] = React.useState(false);
     const [task, setTask] = React.useState<TableProps>();
+    const [isCompleted, setIsCompleted] = React.useState<boolean>(false);
      const classes = useStyles();
+
+     const handleStatusChange = () => {
+         setIsCompleted(!isCompleted)
+     }
 
    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -69,38 +75,38 @@ export const TaskFormik: FC = () => {
             .then((response: TableProps) => {
                 setTask(response);
                 setTaskLoaded(true)
+                if(response.isCompleted){
+                    setIsCompleted(true)
+                }
             })
     };
 
-       React.useEffect(() => {
-           if(id){
-             getTask(id)
-           }
-       }, [id])
+   React.useEffect(() => {
+       if(id){
+         getTask(id)
+       }
+   }, [id])
 
+    console.log(task)
 
-
-       React.useEffect(() => {
-        if(taskLoaded){
-            setInitialValues({text: ((task?.text) as string), username: ((task?.username) as string), email: ((task?.email) as string)})
-        }
-       }, [taskLoaded])
-
+   React.useEffect(() => {
+    if(taskLoaded){
+        setInitialValues({text: ((task?.text) as string), username: ((task?.username) as string), email: ((task?.email) as string), isCompleted: task?.isCompleted})
+    }
+   }, [taskLoaded])
 
     const handleSubmit = (values: FormikValues, actions: FormikHelpers<TaskProps>) => {
         const { setSubmitting } = actions;
         const method = id? 'put': 'post'
         const url = id ? `/tasks/${id}` : '/tasks'
-        if(method==='put' && task?.text===values["text"]){
-            navigate('/')
-            return
-        }
         let data;
         if(id){
-            data = { user:userId, status: [task?.status[0], "отредактировано администратором"]}
-        } else{
-          data = { createdBy:userId}
+            data = {
+                status: (task?.editedByAdmin || values["text"] !== task?.text)? ADMIN_EDITED_STATUS : CREATED,
+                isCompleted: task?.isCompleted || isCompleted,
+                editedByAdmin: task?.editedByAdmin || values["text"] !== task?.text }
         }
+
         api(token, process.env.REACT_APP_API_SERVER)
             .init({
                 body: JSON.stringify({...values, ...data}),
@@ -129,7 +135,7 @@ export const TaskFormik: FC = () => {
                     validationSchema={taskValidationSchema}
                     onSubmit={handleSubmit}
                 >
-                    <TaskForm />
+                    <TaskForm taskId={id} handleStatusChange={handleStatusChange} isCompleted={isCompleted} />
                 </Formik>
             </Box>
             </>

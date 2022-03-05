@@ -16,8 +16,7 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import {Box} from "@material-ui/core";
 import SortIcon from '@material-ui/icons/Sort';
-
-
+import {ADMIN_EDITED_STATUS, CREATED, DONE} from "../../helpers/constants";
 
 const useStyles = makeStyles({
     table: {
@@ -46,20 +45,16 @@ const useStyles = makeStyles({
         '&:hover': {
             cursor: 'pointer'
         }
-
     }
 });
-
-export interface UserProps {
-    username: string;
-    email: string;
-}
 
 export interface TableProps {
     username: string;
     email: string;
-    status: string[];
+    status: string;
     text: string;
+    isCompleted: boolean;
+    editedByAdmin: boolean;
     _id:string;
 }
 
@@ -80,7 +75,6 @@ export const TodosTable: FC = () => {
     const [documentCount, setDocumentCount] = React.useState<number>(0)
     const [sortField, setSortField] = React.useState('_id')
     const [orderBy, setOrderBy] = React.useState<'desc' | 'asc'>('asc')
-
 
     const handleLinkClick = (to: string) => {
         navigate(to);
@@ -132,7 +126,7 @@ export const TodosTable: FC = () => {
                             <TableRow key={index}>
                                 <TableCell width={token ? "25%" : "20%"}>{task.username}</TableCell>
                                 <TableCell width={token ? "25%" : "20%"}>{task.email}</TableCell>
-                                <TableCell width={token ? "25%" : "20%"}>{task.status.join(" ")}</TableCell>
+                                <TableCell width={token ? "25%" : "20%"}>{task.editedByAdmin? ADMIN_EDITED_STATUS : !task.isCompleted ? CREATED: null } {task.isCompleted && DONE}</TableCell>
                                 <TableCell width={token ? "25%" : "20%"}>{task.text} </TableCell>
                                 {token && (<TableCell width={"20%"}>
                                     <Button onClick={() => handleLinkClick(`/tasks/update/${task._id}`)}>
