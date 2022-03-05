@@ -2,8 +2,7 @@ import React from "react";
 import { FormikValues, FormikHelpers, Formik } from "formik";
 import { LoginForm } from "./LoginForm";
 import { LoginValidationSchema } from "./LoginValidationSchema";
-import { Grid, CardContent } from "@material-ui/core";
-import Link from "@material-ui/core/Link";
+import { CardContent } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
 import { api } from "./../../helpers/api";
 import { Alert } from "@material-ui/lab";
@@ -59,11 +58,6 @@ export const LoginFormik = () => {
                 setErrorText("Wrong credentials");
             });
     };
-
-    const handleLinkClick = (to: string) => {
-        navigate(to);
-    };
-
     return (
         <CardContent>
             {errorText && errorText.length && <Alert severity="error">{errorText}</Alert>}
@@ -76,13 +70,6 @@ export const LoginFormik = () => {
             >
                 <LoginForm />
             </Formik>
-            <Grid container>
-                <Grid item>
-                    <Link onClick={() => handleLinkClick("/registration")} href="#" variant="body2">
-                        {"Don't have an account? Sign Up"}
-                    </Link>
-                </Grid>
-            </Grid>
         </CardContent>
     );
 };

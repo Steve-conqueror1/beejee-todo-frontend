@@ -5,12 +5,10 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Login } from "./pages/login/Login";
 import { Registration } from "./pages/registration/Registration";
 import { CreateTask } from "./pages/task/CreateTask";
-import { SessionProvider } from "./context/session.context";
 import {EditTask} from "./pages/task/EditTask";
 
 const App: FC = () => {
     return (
-        <SessionProvider>
             <Router>
                 <ButtonAppBar />
                 <Routes>
@@ -21,7 +19,7 @@ const App: FC = () => {
                     <Route path="/login" element={<Login />} />
                 </Routes>
             </Router>
-        </SessionProvider>
+
     );
 };
 
