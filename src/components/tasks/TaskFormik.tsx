@@ -2,14 +2,14 @@ import React, {FC} from "react";
 import { FormikValues, FormikHelpers, Formik } from "formik";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "./../../helpers/api";
-import { Alert } from "@material-ui/lab";
 import { useSession} from "../../context/session.context";
 import {taskValidationSchema} from "./taskValidationSchema";
 import {TaskForm} from "./TaskForm";
-import {Box, Snackbar} from "@material-ui/core";
+import {Box} from "@material-ui/core";
 import {TableProps } from "../table/TodosTable";
 import {makeStyles} from "@material-ui/core/styles";
 import {ADMIN_EDITED_STATUS, CREATED} from "../../helpers/constants";
+import {AppSnackbar} from "../alerts/Snackbar";
 
 export interface User {
     email: string;
@@ -47,13 +47,15 @@ const useStyles = makeStyles((theme) => ({
 export const TaskFormik: FC = () => {
     const [initialValues, setInitialValues] = React.useState<TaskProps>({ text: "", username:"", email: "", isCompleted: false })
     const [session] = useSession();
-    const {userId, token} = session
+    const { token} = session
     const navigate = useNavigate();
     const { id } = useParams<Params>()
 
     const [open, setOpen] = React.useState(false);
     const [taskLoaded, setTaskLoaded] = React.useState(false);
     const [task, setTask] = React.useState<TableProps>();
+    const [error, setError] = React.useState<string>('');
+    const [message, setMessage] = React.useState<string>('');
     const [isCompleted, setIsCompleted] = React.useState<boolean>(false);
      const classes = useStyles();
 
@@ -87,8 +89,6 @@ export const TaskFormik: FC = () => {
        }
    }, [id])
 
-    console.log(task)
-
    React.useEffect(() => {
     if(taskLoaded){
         setInitialValues({text: ((task?.text) as string), username: ((task?.username) as string), email: ((task?.email) as string), isCompleted: task?.isCompleted})
@@ -114,20 +114,24 @@ export const TaskFormik: FC = () => {
             })
             [method]<TaskResponse>(url)
             .then(()=>{
+                setMessage(`Task ${id? "Updated" : "Created"} Successfully`)
                 setOpen(true);
             })
-            .catch(() => {
+            .catch((response: Response) => {
+                if (response.status === 401){
+                    setError("You need to login to perform this action")
+                    setOpen(true);
+                }else{
+                     setError("Something went wrong")
+                     setOpen(true);
+                }
                 setSubmitting(false);
             });
     };
 
     return (
         <>
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-              <Alert onClose={handleClose} severity="success" color="success">
-                Task {id? "Updated" : "Created"} Successfully
-              </Alert>
-            </Snackbar>
+            <AppSnackbar open={open} handleClose={handleClose} message={message} error={error}/>
             <Box className={classes.formik}>
                 <Formik
                     enableReinitialize

@@ -31,7 +31,6 @@ const SessionProvider: React.FC = ({ children }) => {
     const [session, setSession] = React.useState<Session>(initialState);
 
     const handleSession: HandleSession = (session) => {
-        console.log("session", session)
         if (session === undefined) {
             deleteValues();
             setSession({

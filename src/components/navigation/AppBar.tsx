@@ -9,6 +9,11 @@ import MenuIcon from "@material-ui/icons/Menu";
 import { useNavigate } from "react-router-dom";
 import {useSession} from "../../context/session.context";
 import {AccountCircleRounded} from "@material-ui/icons";
+import {api} from "../../helpers/api";
+
+type InvalidToken = {
+    token: string
+}
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -41,8 +46,21 @@ export const ButtonAppBar = () => {
         navigate(to);
     };
 
+    const invalidateToken = () => {
+         api(null, process.env.REACT_APP_API_SERVER)
+            .init({
+                body: JSON.stringify({token}),
+                headers: { "Content-Type": "application/json" },
+            })
+             .post<InvalidToken>('/logout')
+            .then(()=>{
+                console.log("Invalidating token")
+                 logout()
+            })
+    }
+
     const handleLogout = () => {
-       logout()
+        invalidateToken()
         return navigate("/login");
     }
 
